@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>达播智库 | 达播 BD · 实战知识库</title>
+    <style>
+        :root {
+            --primary: #60a5fa;
+            --secondary: #93c5fd;
+            --light: #bfdbfe;
+            --accent: rgba(96, 165, 250, 0.06);
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --transition: all 0.3s ease;
+            --spacing: 4rem;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes modalIn { from{opacity:0;transform:scale(.96) translateY(12px)} to{opacity:1;transform:scale(1) translateY(0)} }
+
+        .section-title {
+            font-size: 2.2rem; font-weight: 700; text-align: center;
+            margin-bottom: 0.8rem; color: var(--text-dark);
+            position: relative; display: inline-block;
+            left: 50%; transform: translateX(-50%);
+        }
+        .section-title::after {
+            content: ''; display: block;
+            width: 50px; height: 3px;
+            background: var(--primary); border-radius: 2px;
+            margin: 10px auto 0;
+        }
+        .section-subtitle {
+            text-align: center; color: var(--text-light);
+            margin-bottom: 3rem; font-size: 1rem;
+        }
+
+        /* 导航栏 */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+        .logo { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); letter-spacing: -.3px; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a {
+            font-size: .9rem; font-weight: 500; color: var(--text-light);
+            position: relative; padding-bottom: 4px; cursor: pointer;
+            transition: var(--transition);
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px; background: var(--primary);
+            transition: var(--transition);
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active-link { color: var(--primary); font-weight: 600; }
+        .nav-links a.active-link::after { width: 100%; }
+        .nav-cta {
+            background: var(--primary); color: #fff !important;
+            padding: 0.5rem 1.3rem; border-radius: 30px;
+            font-weight: 600 !important; font-size: .85rem !important;
+            transition: var(--transition); border: 2px solid transparent;
+        }
+        .nav-cta:hover { background: transparent !important; color: var(--primary) !important; border-color: var(--primary); }
+        .nav-cta::after { display: none !important; }
+
+        /* Hero - 浅蓝透明底 */
+        .hero {
+            min-height: 100vh; padding: 120px 0 60px;
+            background: rgba(96,165,250,0.06);
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        .hero-content h2#mainTitle {
+            font-size: 5rem; font-weight: 800;
+            letter-spacing: 8px; margin-bottom: 1rem;
+            color: var(--text-dark);
+            animation: fadeInDown 1s ease-out;
+        }
+        .hero-content p#mainSubtitle {
+            font-size: 1.2rem; color: var(--text-light);
+            margin-bottom: 1.8rem; font-weight: 400;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+        .hero-search {
+            max-width: 440px; margin: 0 auto; position: relative;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+        .hero-search input {
+            width: 100%; padding: 14px 18px 14px 46px;
+            border: 2px solid #e2e8f0; border-radius: 50px;
+            font-size: .9rem; outline: none;
+            background: var(--white); transition: var(--transition);
+            color: var(--text-dark);
+        }
+        .hero-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(96,165,250,0.08); }
+        .hero-search input::placeholder { color: #94a3b8; }
+        .hero-search .sicon {
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); font-size: 1rem;
+            pointer-events: none; opacity: .4;
+        }
+        .hero-stats {
+            display: flex; justify-content: center; gap: 32px;
+            margin-top: 1.5rem;
+            animation: fadeInUp 1s ease-out 0.9s backwards;
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat strong { display: block; font-size: 2.2rem; font-weight: 700; color: var(--primary); }
+        .hero-stat span { font-size: .8rem; color: var(--text-light); }
+
+        /* About - 两栏布局 */
+        .about { padding: var(--spacing) 0; background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+        .about-text h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 1rem; }
+        .about-text p { margin-bottom: 1rem; color: var(--text-light); line-height: 1.7; font-size: .95rem; }
+        .about-block {
+            background: rgba(191,219,254,0.2);
+            border-radius: 10px; height: 280px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(191,219,254,0.3);
+            position: relative; overflow: hidden;
+        }
+        .about-block::before {
+            content: ''; position: absolute;
+            top: -16px; left: -16px; width: 100%; height: 100%;
+            border: 2px solid rgba(147,197,253,0.2);
+            border-radius: 10px; z-index: -1;
+        }
+        .about-block span {
+            font-size: .9rem; color: var(--primary);
+            font-weight: 500; padding: 2rem; line-height: 1.7;
+            text-align: center;
+        }
+
+        /* 模块卡片 */
+        .modules { padding: var(--spacing) 0; background: var(--bg-light); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
+        .module-card {
+            background: var(--white); border-radius: var(--radius);
+            padding: 1.8rem; text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: var(--transition);
+            cursor: pointer; border: 1px solid #e2e8f0;
+        }
+        .module-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); border-color: var(--primary); }
+        .module-card .icon-bar {
+            width: 32px; height: 3px; border-radius: 2px;
+            margin: 0 auto 1rem;
+            background: var(--primary); opacity: .4;
+}
+        }
+        .module-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .3rem; }
+        .module-card p { font-size: .82rem; color: var(--text-light); line-height: 1.5; }
+        .module-card .count {
+            display: inline-block; margin-top: .6rem;
+            padding: 2px 12px; border-radius: 20px;
+            font-size: .78rem; font-weight: 600;
+            background: rgba(96,165,250,0.1); color: var(--primary);
+        }
+
+        /* 内容区 */
+        .content-section { padding: var(--spacing) 0; background: var(--white); }
+        .tab-nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 9px 22px; border: 2px solid #e2e8f0;
+            border-radius: 30px; font-size: .85rem; font-weight: 600;
+            cursor: pointer; background: var(--white);
+            transition: var(--transition); color: var(--text-light);
+        }
+        .tab-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .tab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 3px 10px rgba(96,165,250,0.2); }
+        .tab-content { display: none; animation: fadeUp .35s ease; }
+        .tab-content.active { display: block; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .sf { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .fbtn { padding: 6px 18px; border: 2px solid #e2e8f0; border-radius: 100px; font-size: .82rem; font-weight: 600; cursor: pointer; background: var(--white); transition: var(--transition); color: var(--text-light); }
+        .fbtn:hover { border-color: var(--primary); color: var(--primary); }
+        .fbtn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 2px 8px rgba(96,165,250,0.2); }
+
+        .card {
+            background: var(--white); border-radius: var(--radius);
+            padding: 22px; margin-bottom: 14px;
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0; transition: opacity .3s;
+        }
+        .card:hover::before { opacity: 1; }
+
+        .mind-card { cursor: pointer; }
+        .mind-card .miw {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(96,165,250,0.1); color: var(--primary);
+            font-size: 1rem; font-weight: 700; margin-bottom: 10px;
+        }
+        .mind-card .mt { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+        .mind-card .me { font-size: .82rem; line-height: 1.6; color: var(--text-light); }
+        .mind-card .mq {
+            font-size: .82rem; color: var(--text-light);
+            padding: 12px 16px; background: var(--bg-light);
+            border-radius: 8px; border-left: 3px solid var(--primary);
+            margin: 10px 0; line-height: 1.6;
+        }
+        .mind-card .mp {
+            margin-top: 10px; padding: 10px 14px;
+            background: var(--accent); border-radius: 8px;
+            font-size: .82rem; line-height: 1.5;
+            border-left: 3px solid var(--primary); color: var(--text-dark);
+        }
+        .mtags { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+        .mtag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: .78rem; font-weight: 500; background: rgba(191,219,254,0.3); color: var(--primary); }
+
+        .sh { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+        .pb { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+        .pb.d1 { background: #dbeafe; color: #1d4ed8; }
+        .pb.d2 { background: #fef3c7; color: #b45309; }
+        .pb.d3 { background: #d1fae5; color: #065f46; }
+        .pb.d4 { background: #fce7f3; color: #9d174d; }
+        .lb { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: .78rem; font-weight: 600; background: var(--bg-light); color: var(--text-light); }
+        .sc { font-size: .82rem; color: var(--text-light); line-height: 1.6; margin: 6px 0 10px; }
+        .steps { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+        .step { display: flex; gap: 10px; padding: 8px 12px; background: #f8fafc; border-radius: 8px; align-items: flex-start; }
+        .stepn { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; }
+        .stepb { flex: 1; }
+        .stepb strong { font-size: .82rem; color: var(--text-dark); display: block; }
+        .stepb p { font-size: .78rem; color: var(--text-light); margin-top: 2px; line-height: 1.5; }
+        .rgrid { display: grid; gap: 6px; margin: 10px 0; }
+        .ritem { display: flex; gap: 10px; padding: 10px 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary); }
+        .rr { font-size: .82rem; font-weight: 600; min-width: 76px; color: var(--text-dark); flex-shrink: 0; }
+        .rs { font-size: .82rem; color: var(--text-light); line-height: 1.5; }
+        .eb, .tb { padding: 12px 16px; border-radius: 8px; margin: 10px 0; font-size: .82rem; line-height: 1.5; white-space: pre-wrap; }
+        .eb { background: #e0fcf4; border-left: 3px solid #00f5c4; color: #065f46; }
+        .tb { background: #fff0f3; border-left: 3px solid #FE2853; color: #991b1b; }
+
+        .ch { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .cs { font-size: .82rem; color: var(--text-light); margin-bottom: 6px; }
+        .tl { position: relative; padding-left: 22px; margin: 12px 0; }
+        .tl::before { content: ''; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 2px; }
+        .tli { position: relative; padding: 5px 0 5px 14px; font-size: .82rem; color: var(--text-light); line-height: 1.5; }
+        .tli::before { content: ''; position: absolute; left: -19px; top: 11px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid #fff; box-shadow: 0 0 0 2px rgba(191,219,254,0.4); }
+        .lts { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px; }
+        .lt { display: inline-block; padding: 3px 10px; background: #e0fcf4; color: #065f46; border-radius: 20px; font-size: .78rem; font-weight: 500; border: 1px solid #a7f3d0; }
+        .st { font-size: .78rem; color: var(--text-light); margin-top: 6px; }
+
+        .pc { border-left: 4px solid; overflow: hidden; }
+        .pc.high { border-left-color: #FE2853; }
+        .pc.med { border-left-color: var(--primary); }
+        .ph { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .pi { font-size: 1.3rem; flex-shrink: 0; opacity: .5; }
+        .pt { font-size: .95rem; font-weight: 700; color: var(--text-dark); }
+        .pd { font-size: .82rem; color: var(--text-light); margin-top: 2px; }
+        .psv { margin-left: auto; padding: 2px 8px; border-radius: 20px; font-size: .72rem; font-weight: 600; white-space: nowrap; }
+        .pst { font-size: .82rem; font-weight: 700; margin-top: 10px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; color: var(--text-dark); }
+        .wl, .al { margin-top: 4px; padding-left: 0; }
+        .wl li, .al li { font-size: .82rem; padding: 4px 0; list-style: none; line-height: 1.5; }
+        .wl li::before, .al li::before { font-size: .72rem; }
+
+        .ss { padding: 14px 18px; background: linear-gradient(135deg,#fefce8,#fffbeb); border-radius: 8px; font-size: .82rem; line-height: 1.5; margin: 10px 0; border: 1px solid #fde68a; color: #92400e; }
+        .choice { display: block; width: 100%; text-align: left; padding: 12px 16px; margin: 6px 0; border: 2px solid #e2e8f0; border-radius: 8px; background: var(--white); cursor: pointer; font-size: .82rem; transition: var(--transition); line-height: 1.5; }
+        .choice:hover { border-color: var(--primary); background: rgba(96,165,250,0.03); transform: translateX(4px); }
+        .choice.selected { border-color: var(--primary); background: rgba(96,165,250,0.05); font-weight: 600; }
+        .cfb { display: none; padding: 10px 16px; background: #f0fdf4; border: 2px solid #bbf7d0; border-top: none; border-radius: 0 0 8px 8px; font-size: .82rem; line-height: 1.5; margin: -2px 0 6px; animation: slideDown .2s ease; color: #065f46; }
+        .cfb.show { display: block; }
+        .cfb.bad { background: #fff0f3; border-color: #fecaca; color: #991b1b; }
+        .cfb.ok { background: #fff8e1; border-color: #fde68a; color: #92400e; }
+        .sr { margin-top: 8px; font-size: .82rem; color: var(--text-light); text-align: right; font-weight: 700; }
+
+        .mo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 100; justify-content: center; align-items: center; padding: 20px; }
+        .mo.show { display: flex; }
+        .mc { background: var(--white); border-radius: 16px; padding: 28px; max-width: 520px; width: 100%; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 16px 32px rgba(0,0,0,0.08); animation: modalIn .25s ease; }
+        .mc .cb { position: absolute; top: 12px; right: 16px; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; background: none; border: none; color: var(--text-light); transition: all .15s; }
+        .mc .cb:hover { background: #f1f5f9; }
+
+        .empty { text-align: center; padding: 40px 24px; color: var(--text-light); }
+        .empty .ei { font-size: 2.2rem; margin-bottom: 8px; opacity: .3; }
+
+        .testimonials {
+            padding: var(--spacing) 0;
+            background: rgba(191,219,254,0.2);
+            text-align: center;
+        }
+        .testimonials .section-title { color: var(--text-dark); }
+        .testimonials .section-title::after { background: var(--primary); }
+        .testimonial-container { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .testimonial-card {
+            background: var(--white);
+            padding: 1.5rem; border-radius: 10px;
+            max-width: 420px; text-align: left;
+            border: 1px solid rgba(147,197,253,0.15);
+        }
+        .testimonial-card .quote-icon { font-size: 1.6rem; color: var(--primary); line-height: 1; margin-bottom: .6rem; }
+        .testimonial-card .testimonial-text { font-size: .85rem; font-style: italic; margin-bottom: .8rem; line-height: 1.6; color: var(--text-light); }
+        .testimonial-card .user-info h5 { font-size: .85rem; font-weight: 700; margin-bottom: .1rem; }
+        .testimonial-card .user-info span { font-size: .78rem; color: var(--text-light); }
+
+        footer {
+            background: var(--text-dark); color: #cbd5e1;
+            padding: 2.5rem 0 1.2rem;
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem; }
+        .footer-col h4 { color: #fff; margin-bottom: 1rem; font-size: .95rem; font-weight: 700; }
+        .footer-about p { margin-bottom: .8rem; line-height: 1.6; color: #94a3b8; font-size: .82rem; }
+        .footer-links li { margin-bottom: .5rem; }
+        .footer-links a { color: #94a3b8; transition: var(--transition); font-size: .82rem; cursor: pointer; }
+        .footer-links a:hover { color: var(--primary); padding-left: 4px; }
+        .copyright { text-align: center; padding-top: 1rem; border-top: 1px solid #334155; color: #64748b; font-size: .78rem; }
+
+        @media (max-width: 992px) {
+            .hero-content h2#mainTitle { font-size: 2rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .about-block { height: 200px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { min-height: auto; padding: 80px 0 35px; }
+            .hero-stats { flex-wrap: wrap; gap: 16px; margin-top: 1rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+            .section-title { font-size: 1.5rem; }
+            .tab-btn { font-size: .78rem; padding: 7px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">达播智库</div>
+                <div class="nav-links">
+                    <a class="active-link" data-nav-tab="minds">核心思维</a>
+                    <a data-nav-tab="scenes">沟通场景</a>
+                    <a data-nav-tab="cases">案例复盘</a>
+                    <a data-nav-tab="pitfalls">避坑指南</a>
+                    <a data-nav-tab="scenarios" class="nav-cta">场景模拟</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content container">
+            <h2 id="mainTitle">达播智库</h2>
+            <p id="mainSubtitle">达播 BD · 实战知识库</p>
+            <div class="hero-search">
+                <span class="sicon" style="font-size:.8rem;font-weight:700">Q</span>
+                <input id="searchBar" placeholder="搜索思维、场景、话术、关键词...">
+            </div>
+            <div class="hero-stats" id="heroStats"></div>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>沉淀优秀商务的实战智慧</h2>
+                    <p>基于多位优秀商务的深度访谈与实战复盘，系统性梳理为五大知识模块——核心思维、沟通场景、案例复盘、避坑指南、场景模拟，帮助 BD 新人快速建立专业认知。</p>
+                    <p>源自实战，用于实战。</p>
+                </div>
+                <div class="about-block">
+                    <span>基于真实访谈<br>持续更新中</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- hidden nav containers -->
+<div id="desktopNav" style="display:none"></div>
+<div id="mobileNav" style="display:none"></div>
+<section class="modules" id="modulesSection">
+        <div class="container">
+            <h2 class="section-title">知识模块</h2>
+            <p class="section-subtitle">五个模块覆盖达播 BD 全流程</p>
+            <div class="card-grid" id="moduleGrid"></div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="container" id="tabContentContainer">
+            <div id="tabMinds" class="tab-content active"><div class="grid-2" id="mindsGrid"></div></div>
+            <div id="tabScenes" class="tab-content"><div class="sf" id="sceneFilters"></div><div id="scenesGrid"></div></div>
+            <div id="tabCases" class="tab-content"><div class="grid-2" id="casesGrid"></div></div>
+            <div id="tabPitfalls" class="tab-content"><div class="grid-2" id="pitfallsGrid"></div></div>
+            <div id="tabScenarios" class="tab-content"><div id="scenariosGrid"></div></div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">优秀商务说</h2>
+            <div class="testimonial-container" id="testimonialContainer"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col footer-about">
+                    <div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:.6rem">经验库</div>
+                    <p>达播智库致力于沉淀达播 BD 实战知识，帮助每一位商务快速成长。内容来源于真实访谈与实战复盘。</p>
+                </div>
+                <div class="footer-col">
+                    <h4>导航</h4>
+                    <ul class="footer-links">
+                        <li><a data-nav-tab="minds">核心思维</a></li>
+                        <li><a data-nav-tab="scenes">沟通场景</a></li>
+                        <li><a data-nav-tab="cases">案例复盘</a></li>
+                        <li><a data-nav-tab="pitfalls">避坑指南</a></li>
+                        <li><a data-nav-tab="scenarios">场景模拟</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>关于</h4>
+                    <ul class="footer-links">
+                        <li>优秀商务访谈整理</li>
+                        <li>实战经验沉淀</li>
+                        <li>持续更新中</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>达播智库 · 来源于真实访谈与实战复盘</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="mo" id="mindDetail">
+        <div class="mc">
+            <button class="cb" onclick="closeMindDetail()">&times;</button>
+            <div id="mindDetailContent"></div>
+        </div>
+    </div>
+
+    <script>
+var DATA = {"mindModels":[{"id":"mind-1","title":"站在达人角度思考","quote":"如果站在商务角度，就有点像机器人去一对一地沟通。如果换位思考到达人的角度去沟通问题，你会显得这个事非常明显。","source":"优秀商务访谈","essence":"把「我要推品」变成「这个品能帮你解决什么问题」。商务想的是出单，达人想的是粉丝信任和长期变现。","scenes":["建联破冰","推品推介","价格谈判","处理拒绝"],"practice":"下次给达人发消息前，先问自己：如果我是达人，看到这条消息会想什么？"},{"id":"mind-2","title":"真诚是做长期的底牌","quote":"沟通一个长期长线能够有量的达人，中间是需要有一些达成合作的目的，但一定是以比较真诚的态度去的。","source":"优秀商务访谈","essence":"套路能短期成交，但只有真诚能建立长期合作。真诚不是傻白甜，而是在有策略的前提下让对方感受到你的用心。","scenes":["长期维护","线下拜访","处理拒绝"],"practice":"每次与达人互动，问自己：我做的这件事，是否经得起时间的检验？"},{"id":"mind-3","title":"长期主义 — 今天不行不代表明天不行","quote":"一个达人说我可能两年没合作，那时间周期可能拉到我第三年的合作。中间的变化，他的舒适圈变化了，我们的机会就来了。","source":"优秀商务访谈","essence":"达播不是一锤子买卖。被拒绝是常态，关键是在达人心中保持存在感，等待时机成熟。","scenes":["处理拒绝","长期维护","推品推介"],"practice":"建立一个「待激活达人」清单，每个月同步一次品牌进展，而不是每次都是去要合作。"},{"id":"mind-4","title":"不止看业绩，更要看沟通逻辑","quote":"有业绩是一方面，对接达人的思路和逻辑，以及线下面对面去沟通、谈判的东西，也要在。","source":"优秀商务访谈","essence":"业绩好不等于能晋升。真正决定天花板的是：你的逻辑是否清晰，沟通是否到位，能否独立解决复杂问题。","scenes":["晋升发展","自我提升"],"practice":"每次和达人沟通后，复盘：我的逻辑有没有说清楚？达人有没有理解我的核心诉求？"},{"id":"mind-5","title":"主动成长，不做流水线新人","quote":"别等着被带。最好的成长是自己找方向、自己复盘、主动去问。","source":"新人成长建议","essence":"每个新人的起点和能力不同，但拉开差距的不是资源，而是主动复盘的能力。","scenes":["新人成长","自我提升","日常复盘"],"practice":"每周老老实实问自己三个问题：这周我做了什么动作？哪个环节卡住了？下一步怎么改？"},{"id":"mind-6","title":"服务做细，合作做深","quote":"我们不只是合作，我们也是做服务，你把服务做得更细一点，别的品牌方不做的事，我们来做。","source":"磊哥访谈","essence":"品牌方之间产品差距不大时，达人更倾向于选择对自己重视服务好的。","scenes":["推品推介","寄样跟进","长期维护"],"practice":"下次寄样前主动问对方选品流程，准备好竞品分析资料给参考。"}],"commScenes":[{"id":"scene-1","title":"建联破冰：后台私信的艺术","phase":"初期","level":"入门","core":"第一印象决定后续。不是群发模板，而是让对方觉得「这个人懂我」。","steps":[{"step":1,"action":"观察直播","detail":"先看达人直播了解风格话术粉丝互动方式"},{"step":2,"action":"找切入点","detail":"从达人直播间某个细节切入而不是上来就推品"},{"step":3,"action":"简短第一句","detail":"后台私信不宜过长第一句话能让对方回复算成功"},{"step":4,"action":"留白","detail":"发完消息后给对方空间不要连环追发"}],"example_text":"你好看了您的直播讲产品逻辑很清晰我是品牌商务有个品和您风格挺搭方便聊聊吗？","taboo":"上来就发长篇产品介绍\n复制粘贴群发话术\n对方没回就连环消息"},{"id":"scene-2","title":"建立信任：被质疑时怎么接","phase":"中期","level":"进阶","core":"达人质疑你时恰恰是建立信任的机会","steps":[{"step":1,"action":"保持客观","detail":"达人吐槽其他品牌时不附和不贬低"},{"step":2,"action":"展示专业","detail":"用数据案例行业趋势说话"},{"step":3,"action":"给空间","detail":"尊重达人判断不强推"},{"step":4,"action":"主动同步","detail":"定期同步品牌进展和数据"}],"example_text":"没事不急你可以慢慢看我们的数据走势从4月到7月销量一直在涨你可以观察一下","taboo":"达人质疑时立刻降价\n和达人一起吐槽其他品牌\n过度承诺做不到的事"},{"id":"scene-3","title":"推品策略：让达人觉得你在帮他","phase":"中期","level":"进阶","core":"不是我要卖你品而是这个品能帮你打开新增长","steps":[{"step":1,"action":"分析达人痛点","detail":"了解达人的受众和变现模式"},{"step":2,"action":"匹配卖点","detail":"找到产品卖点和达人痛点的结合点"},{"step":3,"action":"给数据","detail":"提供相似账号带货该品的数据"},{"step":4,"action":"给支持","detail":"承诺话术物料投流等全方位支持"}],"example_text":"我看你主要做护肤类目粉丝购买力很强我们这个口服品和你粉丝画像很匹配","taboo":"只讲产品本身不讲达人收益\n不准备数据只讲故事\n一张嘴就要排期"},{"id":"scene-8","title":"寄样跟进：避免样品石沉大海","phase":"初期","level":"入门","core":"寄样不是终点而是谈判的起点。寄出前就要埋钩子让达人给反馈节点。","steps":[{"step":1,"action":"寄样前问反馈时间","detail":"寄出前先问对方选品反馈一般几天"},{"step":2,"action":"物流中加深印象","detail":"寄样2-3天物流期内同步其他达人卖爆的案例"},{"step":3,"action":"了解选品流程","detail":"问清楚是商务过会还是达人本人选品"},{"step":4,"action":"主动做竞品分析","detail":"对方同时测多个竞品时主动帮做竞品对比表"}],"example_text":"我这边顺丰安排我们寄样都做登记您选品反馈一般什么时间？物流中同步一下另一个相似账号的数据","taboo":"寄完样就干等\n达人没回就频繁催促\n不准备竞品对比数据"}],"cases":[{"id":"case-1","title":"诚意破冰：首次合作的成功样本","subtitle":"","difficulty":"入门","summary":"","timeline":["",""],"key_learnings":["",""],"source":"优秀商务访谈"},{"id":"case-3","title":"小飞——竞品断货切入的经典案例","subtitle":"从联系不上到巅峰月GMV 4000万","difficulty":"高阶","summary":"磊哥发现竞品双心断货小飞矩阵号卖得好但联系不上最后从稽查号找到举报电话打动对方。","timeline":["发现竞品双心断货","所有方式联系不上","找到稽查号举报电话","第三天再打打动对方","拉群谈判一个多月","评论区带节奏上品","两天2万瓶断货","巅峰月3000-4000万"],"key_learnings":["竞品断货是最佳切入时机","换思路找突破口","用对方痛点沟通"],"source":"磊哥访谈"}],"pitfalls":[{"id":"pit-1","title":"报价太高吓走达人","icon":"⚠️","desc":"","severity":"中","warning_signs":["",""],"avoidance":["",""]},{"id":"pit-2","title":"过度承诺无法交付","icon":"⚠️","desc":"","severity":"高","warning_signs":["",""],"avoidance":["",""]},{"id":"pit-3","title":"忽略达人粉丝画像","icon":"⚠️","desc":"","severity":"中","warning_signs":["",""],"avoidance":["",""]},{"id":"pit-4","title":"谈判中过早亮底牌","icon":"⚠️","desc":"","severity":"中","warning_signs":["",""],"avoidance":["",""]},{"id":"pit-5","title":"付费框架合作的陷阱","icon":"⚠️","desc":"坑位费+佣金+保量的框架合作完不成也不退款","severity":"高","warning_signs":["只聊保量和金额不聊产品","签约主体与账号非深度绑定","公司注册时间短注册资本少"],"avoidance":["让法务核实主体","确认绑定关系","优先与本人主体合作"]}],"scenarios":[{"id":"sim-1","title":"达人已读不回怎么办","level":"入门","situation":"你给一个感觉意向不错的达人发了消息，对方已读不回了。","choices":[{"text":"换个达人继续推","feedback":"太容易放弃","score":1},{"text":"过两天再发一次不同角度信息","feedback":"可以但不要连续发","score":2},{"text":"回复没事不急您可以慢慢观察数据变化有感觉了随时说","feedback":"最佳回应既尊重又自信","score":3}]},{"id":"sim-2","title":"达人态度很差怎么办","level":"进阶","situation":"你加了一个有点体量的达人微信对方态度很傲慢说话很不客气","choices":[{"text":"继续热脸贴冷屁股","feedback":"太卑微让对方看低","score":1},{"text":"比对方更高冷","feedback":"情绪对抗解决不了问题","score":0},{"text":"不卑不亢正常沟通不情绪化","feedback":"优秀商务的做法","score":3},{"text":"直接放弃找下一个","feedback":"放弃太早","score":0}]},{"id":"sim-3","title":"达人拒绝推新品类","level":"进阶","situation":"长期合作的主播一直在带A类产品你想推B类新品","choices":[{"text":"坚持说B产品很好让达人先试试","feedback":"只说产品好没有给理由","score":0},{"text":"分析趋势Top播都在转帮达人调整话术","feedback":"优秀商务的做法给数据帮想话术","score":3},{"text":"给更高佣金来推新品","feedback":"价格策略不对","score":1},{"text":"等达人主动找你","feedback":"太被动","score":1}]},{"id":"sim-4","title":"线下拜访怎么做","level":"高阶","situation":"你跟进了很久的头部达人恰好下周出差到达人城市","choices":[{"text":"直接说见面聊聊合作","feedback":"太直接对方有压力","score":1},{"text":"先研究达人状态选方式过去看看","feedback":"方向对了","score":2},{"text":"买礼物到门口放下来说不谈业务","feedback":"满分操作先付出不设防","score":3},{"text":"发朋友圈定位等达人主动联系","feedback":"太被动","score":0}]},{"id":"sim-5","title":"达人要求独家合作","level":"进阶","situation":"达人试卖后觉得不错但要求这个品只能给他一个人带","choices":[{"text":"答应他先稳住","feedback":"独家限制大盘","score":0},{"text":"直接拒绝不行","feedback":"太生硬","score":1},{"text":"优先排期给更好机制但独家比较难先跑数据效果好再争取资源","feedback":"坚持原则又给面子","score":3},{"text":"不理他换达人","feedback":"达人认可品是好的信号不该放弃","score":0}]},{"id":"sim-6","title":"合作后数据不理想","level":"进阶","situation":"达人带你的品转化率不高说这个品我带不动下次别给我了","choices":[{"text":"下次有好品再推","feedback":"太轻易放弃","score":1},{"text":"分析原因帮达人调整方向","feedback":"优秀商务做法先诊断再开药","score":3},{"text":"给更好机制补救","feedback":"治标不治本","score":1},{"text":"和最近大盘有关先放放过段时间再同步","feedback":"体面退场留窗口","score":3}]},{"id":"sim-7","title":"达人质疑品牌太小","level":"入门","situation":"中腰部达人说你们品牌没听过粉丝只认大牌","choices":[{"text":"放弃","feedback":"放弃太早","score":0},{"text":"我们品牌年轻但在xx类目已做到Top这是数据","feedback":"用数据回应质疑","score":3},{"text":"有明星达人背书头部都在带我们","feedback":"借势背书","score":3},{"text":"给更低价格吸引","feedback":"降价显得不自信","score":1}]},{"id":"sim-8","title":"达人突然不回复了","level":"进阶","situation":"你和达人之前聊得很好但最近一周完全没回应","choices":[{"text":"每天追发消息","feedback":"太频繁更不想回","score":0},{"text":"隔几天发行业信息不催不逼","feedback":"保持存在感不施压","score":3},{"text":"打电话问为什么不回","feedback":"越界了","score":0},{"text":"算了下一个","feedback":"太轻易放弃","score":1}]},{"id":"sim-9","title":"达人咬死坑位费不松口","level":"进阶","situation":"对方经纪人说坑位费3万不讲价你的预算只有1万","choices":[{"text":"直接放弃预算不够","feedback":"关键达人不该放弃","score":0},{"text":"咬牙接受3万","feedback":"降低议价空间","score":1},{"text":"3万确实超出预算但我们可以在佣金上让步或先1万试跑效果好再加","feedback":"用利益置换降低试错成本","score":3},{"text":"绕过经纪人直接联系达人","feedback":"不尊重合作流程","score":0}]},{"id":"sim-10","title":"达人只谈佣金不谈品","level":"进阶","situation":"你推品给达人对方几乎不问产品只聊佣金和坑位费","choices":[{"text":"直接给最高佣金先上了","feedback":"越不问产品越没兴趣","score":1},{"text":"先给标准佣金继续引导关注产品","feedback":"先吸引兴趣再谈佣金","score":3},{"text":"觉得没诚意直接放弃","feedback":"可先尝试引导","score":1},{"text":"给很低佣金试探","feedback":"让人觉得不专业","score":0}]}]};function init(){
+var m=DATA.mindModels,s=DATA.commScenes,c=DATA.cases,p=DATA.pitfalls,sc=DATA.scenarios;
+var ni=[
+{t:"minds",i:"",l:"核心思维",n:m.length,su:"思考模式",d:"优秀商务的思考模式，驱动每一次高效沟通"},
+{t:"scenes",i:"",l:"沟通场景",n:s.length,su:"沟通拆解",d:"每个阶段的沟通技巧与话术拆解"},
+{t:"cases",i:"",l:"案例复盘",n:c.length,su:"案例复盘",d:"真实合作案例的完整复盘"},
+{t:"pitfalls",i:"",l:"避坑指南",n:p.length,su:"踩坑预警",d:"新人常见踩坑预警与规避方法"},
+{t:"scenarios",i:"",l:"场景模拟",n:sc.length,su:"模拟练习",d:"互动模拟，检验你的判断力"}
+];
+
+function syncNavHighlight(t){document.querySelectorAll('.nav-links a').forEach(function(el){el.classList.toggle('active-link',el.dataset.navTab===t)})}
+function sw(t){syncNavHighlight(t);
+var o=ni.find(function(x){return x.t===t});
+document.getElementById("mainTitle").textContent=o.i+" "+o.l;
+document.getElementById("mainSubtitle").textContent=o.d;
+document.querySelectorAll(".tab-content").forEach(function(e){e.classList.remove("active")});
+document.getElementById("tab"+t.charAt(0).toUpperCase()+t.slice(1)).classList.add("active");
+var v=document.getElementById("searchBar").value;
+t==="minds"?rm(v):t==="scenes"?rs(v,gp()):t==="cases"?rc(v):t==="pitfalls"?rp(v):t==="scenarios"?rsc(v):0;
+uhs(t);
+}
+window.sw=sw;
+
+function uhs(t){
+var g=document.getElementById("heroStats");
+if(t==="minds") g.innerHTML='<div class="hero-stat"><strong>'+m.length+'</strong> 个核心思维</div>';
+else if(t==="scenes") g.innerHTML='<div class="hero-stat"><strong>'+s.length+'</strong> 个沟通场景</div><div class="hero-stat">共 '+s.reduce(function(a,x){return a+(x.steps?x.steps.length:0)+(x.rejections?x.rejections.length:0)},0)+' 条方法</div>';
+else if(t==="cases") g.innerHTML='<div class="hero-stat"><strong>'+c.length+'</strong> 个案例</div><div class="hero-stat">'+c.reduce(function(a,x){return a+x.key_learnings.length},0)+' 条经验</div>';
+else if(t==="pitfalls") g.innerHTML='<div class="hero-stat"><strong>'+p.length+'</strong> 类陷阱</div><div class="hero-stat">'+p.filter(function(x){return x.severity==="高"}).length+' 个高风险</div>';
+else if(t==="scenarios") g.innerHTML='<div class="hero-stat"><strong>'+sc.length+'</strong> 个场景模拟</div><div class="hero-stat">'+(sc.reduce(function(a,x){return a+x.choices.length},0))+' 个选项供练习</div>';
+}
+
+function bn(c){
+c.innerHTML=ni.map(function(o,i){return '<div class="nav-item'+(i===0?" active":"")+'" data-tab="'+o.t+'"><span class="ni">'+o.i+'</span>'+o.l+'<span class="nb">'+o.n+'</span></div>'}).join("");
+c.querySelectorAll(".nav-item").forEach(function(el){
+el.addEventListener("click",function(){
+c.querySelectorAll(".nav-item").forEach(function(e){e.classList.remove("active")});
+this.classList.add("active");sw(this.dataset.tab);
+});
+});
+}
+bn(document.getElementById("desktopNav"));bn(document.getElementById("mobileNav"));
+document.querySelectorAll('[data-nav-tab]').forEach(function(el){
+el.addEventListener('click',function(){
+var tab=this.dataset.navTab;
+document.querySelectorAll('#desktopNav .nav-item,#mobileNav .nav-item').forEach(function(e){e.classList.toggle('active',e.dataset.tab===tab)});
+sw(tab);
+});
+});
+function gp(){var a=document.querySelector(".fbtn.active");return a?a.dataset.phase:"all"}
+function esc(x){return String(x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function es(m){return '<div class="empty"><div class="ei">🎯</div><p>'+esc(m)+'</p></div>'}
+
+function rm(f){
+var g=document.getElementById("mindsGrid");
+var a=f?m.filter(function(t){return t.title.indexOf(f)>=0||t.essence.indexOf(f)>=0||t.quote.indexOf(f)>=0}):m;
+if(!a.length){g.innerHTML=es("没有匹配的思维模式，试试其他关键词");return}
+g.innerHTML=a.map(function(t){
+return '<div class="card mind-card" data-mid="'+t.id+'"><div class="miw">'+(t.icon||'')+'</div><div class="mt">'+esc(t.title)+'</div><div class="me">'+esc(t.essence)+'</div><div class="mq">'+esc(t.quote)+'</div><div class="mp">'+esc(t.practice)+'</div><div class="mtags">'+t.scenes.map(function(v){return '<span class="mtag">'+esc(v)+'</span>'}).join("")+'</div></div>'
+}).join("");
+g.querySelectorAll("[data-mid]").forEach(function(el){el.addEventListener("click",function(){sm(this.dataset.mid)})});
+}
+
+window.sm=function(id){
+var t=m.find(function(x){return x.id===id});
+if(!t)return;
+document.getElementById("mindDetailContent").innerHTML=
+'<div class="miw" style="margin-bottom:16px">'+(t.icon||'')+'</div><h3 style="font-size:22px;font-weight:700">'+esc(t.title)+'</h3>'+
+'<div class="mq" style="margin:16px 0">'+esc(t.quote)+'</div>'+
+'<div style="margin:20px 0"><strong style="font-size:15px">核心精髓</strong><p style="margin-top:6px;font-size:14px;line-height:1.8;color:#475569">'+esc(t.essence)+'</p></div>'+
+'<div style="margin:20px 0"><strong style="font-size:15px">💡 自检练习</strong><p style="margin-top:6px;font-size:14px;line-height:1.8;color:#475569">'+esc(t.practice)+'</p></div>'+
+'<div style="margin:20px 0"><strong style="font-size:15px">适用场景</strong><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">'+t.scenes.map(function(v){return '<span class="mtag">'+esc(v)+'</span>'}).join("")+'</div></div>'+
+'<div style="margin-top:16px;font-size:12px;color:var(--g);padding-top:14px;border-top:1px solid var(--b)">来源：'+esc(t.source)+'</div>';
+document.getElementById("mindDetail").classList.add("show");
+}
+window.closeMindDetail=function(){document.getElementById("mindDetail").classList.remove("show")}
+
+function rs(f,pf){
+var g=document.getElementById("scenesGrid");
+var a=s;if(f)a=a.filter(function(t){return t.title.indexOf(f)>=0||t.core.indexOf(f)>=0});
+if(pf&&pf!=="all")a=a.filter(function(t){return t.phase===pf});
+var ph=[];s.forEach(function(t){if(ph.indexOf(t.phase)<0)ph.push(t.phase)});
+var fd=document.getElementById("sceneFilters");
+fd.innerHTML='<button class="fbtn active" data-phase="all">全部</button>'+ph.map(function(v){return '<button class="fbtn" data-phase="'+v+'">'+v+'</button>'}).join("");
+fd.querySelectorAll(".fbtn").forEach(function(b){b.addEventListener("click",function(){fd.querySelectorAll(".fbtn").forEach(function(x){x.classList.remove("active")});this.classList.add("active");rs(document.getElementById("searchBar").value,this.dataset.phase)})});
+if(!a.length){g.innerHTML=es("没有匹配的沟通场景");return}
+var pc={"初期":"d1","中期":"d2","后期":"d3","全周期":"d4"};
+g.innerHTML=a.map(function(t){
+var sth=t.steps?'<div class="steps">'+t.steps.map(function(v){return '<div class="step"><div class="stepn">'+v.step+'</div><div class="stepb"><strong>'+esc(v.action)+'</strong><p>'+esc(v.detail)+'</p></div></div>'}).join("")+'</div>':"";
+var rjh=t.rejections?'<div class="rgrid">'+t.rejections.map(function(v){return '<div class="ritem"><div class="rr">'+esc(v.reason)+'</div><div class="rs">'+esc(v.strategy)+'</div></div>'}).join("")+'</div>':"";
+var exh=t.example_text?'<div class="eb">📝 '+esc(t.example_text)+'</div>':"";
+var tbh=t.taboo?'<div class="tb">'+esc(t.taboo)+'</div>':"";
+return '<div class="card"><div class="sh"><span class="pb '+(pc[t.phase]||"d1")+'">'+esc(t.phase)+'</span><span class="lb">'+esc(t.level)+'</span></div><div class="mt">'+esc(t.title)+'</div><div class="sc">'+esc(t.core)+'</div>'+sth+rjh+exh+tbh+'</div>'
+}).join("");
+}
+
+function rc(f){
+var g=document.getElementById("casesGrid");
+var a=f?c.filter(function(t){return t.title.indexOf(f)>=0||t.summary.indexOf(f)>=0}):c;
+if(!a.length){g.innerHTML=es("没有匹配的案例");return}
+g.innerHTML=a.map(function(t){
+var tl=t.timeline.map(function(v){return '<div class="tli">'+esc(v)+'</div>'}).join("");
+var ll=t.key_learnings.map(function(v){return '<span class="lt">✨ '+esc(v)+'</span>'}).join("");
+var sb=t.subtitle?'<div class="cs">'+esc(t.subtitle)+'</div>':"";
+return '<div class="card"><div class="ch"><div class="mt">'+esc(t.title)+'</div><span class="lb">'+esc(t.difficulty)+'</span></div>'+sb+'<div style="font-size:14px;color:#475569;line-height:1.7">'+esc(t.summary)+'</div><div style="margin-top:16px"><strong style="font-size:14px;display:flex;align-items:center;gap:6px">📅 时间线</strong></div><div class="tl">'+tl+'</div><div class="lts">'+ll+'</div><div class="st">来源：'+esc(t.source)+'</div></div>'
+}).join("");
+}
+
+function rp(f){
+var g=document.getElementById("pitfallsGrid");
+var a=f?p.filter(function(t){return t.title.indexOf(f)>=0||t.desc.indexOf(f)>=0}):p;
+if(!a.length){g.innerHTML=es("没有匹配的陷阱");return}
+g.innerHTML=a.map(function(t){
+var wh=t.warning_signs.map(function(v){return '<li>'+esc(v)+'</li>'}).join("");
+var ah=t.avoidance.map(function(v){return '<li>'+esc(v)+'</li>'}).join("");
+var sv=t.severity, svb=sv==="高"?"#fef2f2":"#fefce8", svc=sv==="高"?"#dc2626":"#b45309";
+return '<div class="card pc '+(sv==="高"?"high":"med")+'"><div class="ph"><span class="pi">'+(t.icon||'')+'</span><div><div class="pt">'+esc(t.title)+'</div><div class="pd">'+esc(t.desc)+'</div></div><span class="psv" style="background:'+svb+';color:'+svc+'">'+sv+'风险</span></div><div class="pst">⚠️ 预警信号</div><ul class="wl">'+wh+'</ul><div class="pst">✅ 避坑方法</div><ul class="al">'+ah+'</ul></div>'
+}).join("");
+}
+
+function rsc(f){
+var g=document.getElementById("scenariosGrid");
+var a=f?sc.filter(function(t){return t.title.indexOf(f)>=0||t.situation.indexOf(f)>=0}):sc;
+if(!a.length){g.innerHTML=es("没有匹配的场景模拟");return}
+g.innerHTML=a.map(function(t,idx){
+var ch=t.choices.map(function(v,ci){
+return '<button class="choice" data-si="'+idx+'" data-ci="'+ci+'">'+esc(v.text)+'</button><div class="cfb '+(v.score<=1?"bad":v.score===2?"ok":"")+'" id="fb-'+idx+'-'+ci+'">'+esc(v.feedback)+'</div>'
+}).join("");
+return '<div class="card"><div class="ch"><div class="mt">'+esc(t.title)+'</div><span class="lb">'+esc(t.level)+'</span></div><div class="ss">📌 '+esc(t.situation)+'</div><div style="margin-top:16px"><strong style="font-size:14px">你的选择是什么？</strong> <span style="font-size:12px;color:var(--g);font-weight:400">（点击选项查看反馈）</span></div>'+ch+'<div class="sr" id="res-'+idx+'"></div></div>'
+}).join("");
+g.querySelectorAll(".choice").forEach(function(el){
+el.addEventListener("click",function(){
+var si=parseInt(this.dataset.si),ci=parseInt(this.dataset.ci);
+sc[si].choices.forEach(function(_,cj){var fb=document.getElementById("fb-"+si+"-"+cj);if(fb)fb.classList.remove("show")});
+var fb=document.getElementById("fb-"+si+"-"+ci);if(fb)fb.classList.add("show");
+var c=sc[si].choices[ci];
+var em=c.score>=3?"🌟":c.score>=2?"👍":c.score>=1?"💪":"😅";
+document.getElementById("res-"+si).textContent=em+" 得分："+c.score+"/3";
+})
+});
+}
+
+document.getElementById("searchBar").addEventListener("input",function(){
+var v=this.value;
+document.getElementById("tabMinds").classList.contains("active")?rm(v):
+document.getElementById("tabScenes").classList.contains("active")?rs(v,gp()):
+document.getElementById("tabCases").classList.contains("active")?rc(v):
+document.getElementById("tabPitfalls").classList.contains("active")?rp(v):
+document.getElementById("tabScenarios").classList.contains("active")?rsc(v):0;
+});
+document.getElementById("mindDetail").addEventListener("click",function(e){if(e.target===this)closeMindDetail()});
+uhs("minds");rm();rs("","all");rc();rp();rsc();
+}
+init();
+
+// --- 额外界面绑定 ---
+
+function syncNavHighlight(t) {
+    document.querySelectorAll('[data-nav-tab]').forEach(function(el) {
+        el.classList.toggle('active-link', el.dataset.navTab === t);
+    });
+}
+
+// 模块预览卡片
+var modules = [
+    { icon: "", title: "\u6838\u5FC3\u601D\u7EF4", desc: "\u4F18\u79C0\u5546\u52A1\u7684\u601D\u8003\u6A21\u5F0F", count: DATA.mindModels.length },
+    { icon: "", title: "\u6C9F\u901A\u573A\u666F", desc: "\u6BCF\u4E2A\u9636\u6BB5\u7684\u6280\u5DE7\u4E0E\u8BDD\u672F", count: DATA.commScenes.length },
+    { icon: "", title: "\u6848\u4F8B\u590D\u76D8", desc: "\u771F\u5B9E\u5408\u4F5C\u6848\u4F8B\u7684\u5B8C\u6574\u590D\u76D8", count: DATA.cases.length },
+    { icon: "", title: "\u907F\u5751\u6307\u5357", desc: "\u65B0\u4EBA\u5E38\u89C1\u8E29\u5751\u9884\u8B66\u4E0E\u89C4\u907F", count: DATA.pitfalls.length },
+    { icon: "", title: "\u573A\u666F\u6A21\u62DF", desc: "\u4E92\u52A8\u6A21\u62DF\uFF0C\u68C0\u9A8C\u5224\u65AD\u529B", count: DATA.scenarios.length }
+];
+
+var mg = document.getElementById('moduleGrid');
+var tabs = ['minds','scenes','cases','pitfalls','scenarios'];
+mg.innerHTML = modules.map(function(m, i) {
+    return '<div class="module-card" data-nav-tab="' + tabs[i] + '">' +
+                        '<div class="icon"></div>' +
+                        '<h3>' + m.title + '</h3>' +
+        '<p>' + m.desc + '</p>' +
+        '<span class="count">' + m.count + ' \u4E2A</span></div>';
+}).join('');
+
+// 推荐语
+var quotes = [
+    { text: "\u5982\u679C\u7AD9\u5728\u5546\u52A1\u89D2\u5EA6\uFF0C\u5C31\u6709\u70B9\u50CF\u673A\u5668\u4EBA\u53BB\u4E00\u5BF9\u4E00\u5730\u6C9F\u901A\u3002\u6362\u4F4D\u601D\u8003\u5230\u8FBE\u4EBA\u7684\u89D2\u5EA6\u53BB\u6C9F\u901A\uFF0C\u4F60\u4F1A\u663E\u5F97\u8FD9\u4E2A\u4E8B\u975E\u5E38\u660E\u663E\u3002", author: "\u4F18\u79C0\u5546\u52A1\u8BBF\u8C08", role: "\u7AD9\u5728\u8FBE\u4EBA\u89D2\u5EA6\u601D\u8003" },
+    { text: "\u4E00\u4E2A\u8FBE\u4EBA\u8BF4\u6211\u53EF\u80FD\u4E24\u5E74\u6CA1\u5408\u4F5C\uFF0C\u90A3\u65F6\u95F4\u5468\u671F\u53EF\u80FD\u62C9\u5230\u6211\u7B2C\u4E09\u5E74\u7684\u5408\u4F5C\u3002\u4E2D\u95F4\u7684\u53D8\u5316\uFF0C\u4ED6\u7684\u8212\u9002\u5708\u53D8\u5316\u4E86\uFF0C\u673A\u4F1A\u5C31\u6765\u4E86\u3002", author: "\u4F18\u79C0\u5546\u52A1\u8BBF\u8C08", role: "\u957F\u671F\u4E3B\u4E49" }
+];
+var tc = document.getElementById('testimonialContainer');
+if(tc) {
+    tc.innerHTML = quotes.map(function(q) {
+        return '<div class="testimonial-card">' +
+            '<div class="quote-icon">\"</div>' +
+            '<p class="testimonial-text">' + q.text + '</p>' +
+            '<div class="user-info"><h5>' + q.author + '</h5><span>' + q.role + '</span></div></div>';
+    }).join('');
+}
+
+// 绑定导航高亮
+var origSw = window.sw;
+window.sw = function(t) {
+    syncNavHighlight(t);
+    if(origSw) origSw(t);
+};
+
+// 导航点击
+document.querySelectorAll('[data-nav-tab]').forEach(function(el) {
+    el.addEventListener('click', function() {
+        var tab = this.dataset.navTab;
+        document.querySelectorAll('.nav-item').forEach(function(e) {
+            e.classList.toggle('active', e.dataset.tab === tab);
+        });
+        if(window.sw) window.sw(tab);
+    });
+});
+</script>
+</body>
+</html>
