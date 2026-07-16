@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云端秘境 | 探索未被打扰的自然之美</title>
+    <style>
+        /* --- 基础变量定义 --- */
+        :root {
+            --primary-color: #2c5f2d; /* 森林绿 */
+            --secondary-color: #97bc62; /* 嫩芽绿 */
+            --accent-color: #ffc107; /* 暖阳黄 */
+            --text-dark: #1a1a1a;
+            --text-light: #555555;
+            --bg-light: #f9f9f9;
+            --white: #ffffff;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-serif: 'Georgia', 'Times New Roman', serif;
+            --transition: all 0.3s ease;
+            --spacing-unit: 4rem;
+        }
+
+        /* --- 全局重置 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* --- 排版工具类 --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            margin: 10px auto 0;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* --- 导航栏 --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .cta-btn:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* --- 移动端菜单按钮 (视觉隐藏，逻辑省略以保持简洁) --- */
+        .menu-toggle {
+            display: none;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://picsum.photos/seed/mountains/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            padding-top: 80px;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-serif);
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--accent-color);
+            color: var(--text-dark);
+            font-weight: bold;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background-color: #ffca2c;
+        }
+
+        /* --- 简介区域 --- */
+        .about {
+            padding: var(--spacing-unit) 0;
+            background-color: var(--white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-img-wrapper {
+            position: relative;
+        }
+
+        .about-img-wrapper img {
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            height: auto;
+        }
+
+        .about-img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100%;
+            height: 100%;
+            border: 3px solid var(--secondary-color);
+            border-radius: 10px;
+            z-index: -1;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            text-align: justify;
+        }
+
+        /* --- 精彩景点 --- */
+        .highlights {
+            padding: var(--spacing-unit) 0;
+            background-color: var(--bg-light);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        .card-content h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .card-content p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-link span {
+            transition: var(--transition);
+        }
+
+        .card-link:hover {
+            color: var(--primary-color);
+        }
+
+        .card-link:hover span {
+            transform: translateX(5px);
+        }
+
+        /* --- 体验项目 --- */
+        .experience {
+            padding: var(--spacing-unit) 0;
+        }
+
+        .exp-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .exp-item {
+            position: relative;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .exp-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .exp-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            color: var(--white);
+            opacity: 0.9;
+            transition: var(--transition);
+        }
+
+        .exp-item:hover img {
+            transform: scale(1.1);
+            filter: brightness(0.8);
+        }
+
+        .exp-overlay h4 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .exp-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* --- 游客评价 --- */
+        .testimonials {
+            padding: var(--spacing-unit) 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .testimonials .section-title {
+            color: var(--white);
+        }
+
+        .testimonial-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 10px;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .quote-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-info h5 {
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-info span {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* --- 页脚 --- */
+        footer {
+            background-color: #1a1a1a;
+            color: #dcdcdc;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-about p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #888;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #888;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* --- 动画关键帧 --- */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- 响应式适配 --- */
+        @media (max-width: 992px) {
+            .hero-content h1 { font-size: 3rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .about-img-wrapper { order: -1; margin-bottom: 2rem; }
+            .exp-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* 简化处理，移动端隐藏菜单 */
+            .menu-toggle { display: block; font-size: 1.5rem; cursor: pointer; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.1rem; }
+            .exp-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .section-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <header id="navbar">
+        <div class="container">
+            <nav>
+                <div class="logo">CloudSecret.</div>
+                <div class="nav-links">
+                    <a href="#home">首页</a>
+                    <a href="#about">关于云端</a>
+                    <a href="#highlights">热门景点</a>
+                    <a href="#experience">深度体验</a>
+                    <a href="#contact" class="cta-btn">立即预订</a>
+                </div>
+                <!-- 移动端菜单图标占位 -->
+                <div class="menu-toggle">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首屏 Hero -->
+    <section id="home" class="hero">
+        <div class="hero-content container">
+            <h1>云端秘境</h1>
+            <p>在云海之上，邂逅未被打扰的自然奇迹</p>
+            <a href="#highlights" class="hero-btn">开启旅程</a>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>在云端，找回内心的宁静</h2>
+                    <p>云端秘境位于海拔3000米的群山环抱之中，这里远离城市的喧嚣，只有风吹过松林的沙沙声和清澈见底的湖泊倒影。作为一个新兴的生态保护区，我们致力于在保护原始自然环境的同时，为游客提供最纯粹的回归自然的体验。</p>
+                    <p>无论你是寻求冒险的登山者，还是渴望放松的诗人，这里的四季景色——春花、夏绿、秋叶、冬雪——都会给你带来不同的震撼。每一口呼吸，都是高负氧离子的纯净馈赠。</p>
+                    <a href="#" style="color: var(--primary-color); font-weight: 600; border-bottom: 2px solid var(--accent-color);">阅读更多关于我们的故事 &rarr;</a>
+                </div>
+                <div class="about-img-wrapper">
+                    <img src="https://picsum.photos/seed/forest/600/400" alt="云端森林">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门景点 -->
+    <section id="highlights" class="highlights">
+        <div class="container">
+            <h2 class="section-title">必游胜地</h2>
+            <p class="section-subtitle">探索大自然鬼斧神工的杰作</p>
+            
+            <div class="card-grid">
+                <!-- 景点 1 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="https://picsum.photos/seed/lake/400/300" alt="翡翠湖">
+                    </div>
+                    <div class="card-content">
+                        <h3>翡翠湖</h3>
+                        <p>海拔最高的天然湖泊，湖水在阳光下呈现出不可思议的翡翠绿色，周围常年云雾缭绕，宛如仙境。</p>
+                        <a href="#" class="card-link">查看详情 <span>&rarr;</span></a>
+                    </div>
+                </article>
+
+                <!-- 景点 2 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="https://picsum.photos/seed/waterfall/400/300" alt="飞龙瀑布">
+                    </div>
+                    <div class="card-content">
+                        <h3>飞龙瀑布</h3>
+                        <p>落差百米的壮观瀑布，水声如雷，气势磅礴。雨后常有彩虹横跨瀑布，是摄影爱好者的绝佳取景地。</p>
+                        <a href="#" class="card-link">查看详情 <span>&rarr;</span></a>
+                    </div>
+                </article>
+
+                <!-- 景点 3 -->
+                <article class="card">
+                    <div class="card-image">
+                        <img src="https://picsum.photos/seed/mountain/400/300" alt="观景台">
+                    </div>
+                    <div class="card-content">
+                        <h3>云端观景台</h3>
+                        <p>悬崖边的玻璃栈道观景台，脚下是万丈深渊，眼前是连绵起伏的群山，体验心跳加速的快感。</p>
+                        <a href="#" class="card-link">查看详情 <span>&rarr;</span></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 深度体验 -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">沉浸式体验</h2>
+            <p class="section-subtitle">不仅仅是观光，更是生活的另一种方式</p>
+            
+            <div class="exp-grid">
+                <div class="exp-item">
+                    <img src="https://picsum.photos/seed/camping/400/400" alt="星空露营">
+                    <div class="exp-overlay">
+                        <h4>星空露营</h4>
+                        <p>在专业营地仰望银河，听虫鸣入睡。</p>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <img src="https://picsum.photos/seed/hiking/400/400" alt="丛林徒步">
+                    <div class="exp-overlay">
+                        <h4>丛林徒步</h4>
+                        <p>跟随向导探索未知的原始森林。</p>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <img src="https://picsum.photos/seed/meditation/400/400" alt="静心禅修">
+                    <div class="exp-overlay">
+                        <h4>静心禅修</h4>
+                        <p>在古刹中体验片刻的宁静与内观。</p>
+                    </div>
+                </div>
+                <div class="exp-item">
+                    <img src="https://picsum.photos/seed/food/400/400" alt="山野美食">
+                    <div class="exp-overlay">
+                        <h4>山野美食</h4>
+                        <p>品尝就地取材的新鲜山珍与野味。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游客评价 -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">旅人寄语</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-card">
+                    <div class="quote-icon">“</div>
+                    <p class="testimonial-text">这是我见过的最干净的地方，空气是甜的。清晨推开窗户看到云海的那一刻，我觉得所有的疲惫都消失了。</p>
+                    <div class="user-info">
+                        <h5>李雨桐</h5>
+                        <span>自由摄影师</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote-icon">“</div>
+                    <p class="testimonial-text">非常适合带孩子来亲近自然。徒步路线设计得很合理，既能欣赏美景又不会太累，体验非常棒！</p>
+                    <div class="user-info">
+                        <h5>张伟</h5>
+                        <span>亲子游爱好者</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col footer-about">
+                    <div class="logo" style="color:white; margin-bottom: 1rem;">CloudSecret.</div>
+                    <p>云端秘境旅游度假区致力于保护自然生态，传播高山文化。我们期待您的到来，共同守护这片净土。</p>
+                </div>
+                <div class="footer-col">
+                    <h4>快速导航</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">回到首页</a></li>
+                        <li><a href="#about">景区概况</a></li>
+                        <li><a href="#highlights">景点推荐</a></li>
+                        <li><a href="#experience">活动预订</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>帮助中心</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">交通指南</a></li>
+                        <li><a href="#">票务政策</a></li>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>联系方式</h4>
+                    <ul class="footer-links">
+                        <li>电话: 400-123-4567</li>
+                        <li>邮箱: visit@cloudsecret.com</li>
+                        <li>地址: 云端山脉自然保护区</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 云端秘境景区. All Rights Reserved. </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
